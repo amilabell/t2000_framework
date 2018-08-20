@@ -13,7 +13,10 @@
         <br>
         <br>
         <!--view preferences-->
-          <b-table v-for="x in tableArray" :key="x.name" :items="x.items" :fields="categories"></b-table>
+        <div v-for="(item, index) in tableArray" class="tableDivs">
+          {{item}}
+          <b-table responsive :key="item" :items="items[index]" :fields="categories" class="table"></b-table>
+        </div>
     </div>
 </template>
 <script>
@@ -25,6 +28,7 @@ export default {
     return {
       selected: 'countries',
       dims: [],
+      items: [],
       countries: [],
       clickedCountry: '',
       tableArray: [],
@@ -63,7 +67,7 @@ export default {
         }
           ],
       items_degree: [],
-      categories: [{key: 'dim', label: 'dimension'}, {key: 'pole', label: 'score'}],
+      categories: [{key: 'dim', label: 'dim'}, {key: 'pole', label: 'score'}],
       test: {
         
       }
@@ -136,48 +140,51 @@ export default {
     },
     
     getPrefs: async function(c_code){
-      console.log(c_code);
-      this.tableArray.push([]);
-      this.tableArray[this.tableArray.length-1]['items'] = [];
-      this.tableArray[this.tableArray.length-1]['name'] = c_code;
-      var dims = await this.getCountryDims(c_code);
-        //iterate over all dims
-        for(var i=0; i<dims.length; i++){
-          //get scores
-          //determine the pole (high=true or false)
-          var poleArray = this.getPole(dims[i].score);
-          console.log(poleArray)
-          var pole = poleArray.bool;
-          var prefids = [];
-          var item = {};
-          item['pole'] = poleArray.score;
-          item['_rowVariant'] = poleArray.rowvariant;
-          item['dim'] = this.dims[i];
-          if(pole === true || pole === false){
-            //ids = all the ids for the given dimension and pole
-            var ids = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/prefs/getPref/' + this.dims[i] + '/' + pole);
-            for(var k=0; k<ids.data.length; k++){
-              //prefids = array with all ids
-              prefids.push(ids.data[k].pref_id);
+      //retrieve position of element already in array
+      var x = this.tableArray.indexOf(c_code);
+      if(x === -1){
+        var position = this.tableArray.length;
+        this.tableArray.push(c_code);
+        var dims = await this.getCountryDims(c_code);
+        this.items.push([]);
+          //iterate over all dims
+          for(var i=0; i<dims.length; i++){
+            //get scores
+            //determine the pole (high=true or false)
+            var poleArray = this.getPole(dims[i].score);
+            console.log(poleArray)
+            var pole = poleArray.bool;
+            var prefids = [];
+            var item = {};
+            item['pole'] = poleArray.score;
+            item['_rowVariant'] = poleArray.rowvariant;
+            item['dim'] = this.dims[i];
+            if(pole === true || pole === false){
+              //ids = all the ids for the given dimension and pole
+              var ids = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/prefs/getPref/' + this.dims[i] + '/' + pole);
+              for(var k=0; k<ids.data.length; k++){
+                //prefids = array with all ids
+                prefids.push(ids.data[k].pref_id);
+              }
+              console.log(prefids);
+              var data = [];
+              for(var j=0; j<prefids.length; j++){
+                var response2 = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/prefs/getSinglePref/' + prefids[j]);
+                data.push(response2.data);
+              }
+              var categories = data.map(a => a.category);
+              categories = this.removeDuplicates(categories);
+              console.log(categories);
+              for(var l=0; l<categories.length; l++){
+              var helperArray =  this.filterByCat(data, 'category', categories[l]);
+              item[categories[l]] = helperArray;
+              }
             }
-            console.log(prefids);
-            var data = [];
-            for(var j=0; j<prefids.length; j++){
-              var response2 = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/prefs/getSinglePref/' + prefids[j]);
-              data.push(response2.data);
-            }
-            var categories = data.map(a => a.category);
-            categories = this.removeDuplicates(categories);
-            console.log(categories);
-            for(var l=0; l<categories.length; l++){
-            var helperArray =  this.filterByCat(data, 'category', categories[l]);
-            item[categories[l]] = helperArray;
-            }
+            this.items[this.items.length -1].push(item);
           }
-          var items = [];
-          items.push(item);
-        }
-        console.log(this.tableArray[this.tableArray.length-1]['items']);
+          console.log(this.items);
+          console.log(this.tableArray)
+      }
     },
     
     filterByCat: function(array, key, value) {
@@ -247,5 +254,12 @@ export default {
 }
 #high{
  background-color: red; 
+}
+.tableDivs{
+  margin-left: -5vw;
+  
+}
+table{
+  max-width: 80px;
 }
 </style>
