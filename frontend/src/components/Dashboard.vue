@@ -5,12 +5,23 @@
         </div>
         <div>
             <b-form-select @input="getPrefs(clickedCountry)"  v-model="clickedCountry" :options="countries" value-field="c_code" text-field="name" class="countrySelect"/>
-        <br>
+        <p/>
         </div>
         <!--view preferences-->
         <div v-for="(item, index) in tableArray" class="tableDivs">
-          {{item}}
-          <b-table responsive :key="item" :items="items[index]" :fields="categories" class="table"></b-table>
+          {{item}} <b-btn v-b-toggle="item" class="s">hide/show</b-btn>
+          <b-collapse visible :id="item">
+              <b-table responsive :key="item" :items="items[index]" :fields="categories" class="table" small>
+                  <span slot="1" slot-scope="data" v-html="data.value"></span>
+                  <span slot="2" slot-scope="data" v-html="data.value"></span>
+                  <span slot="3" slot-scope="data" v-html="data.value"></span>
+                  <span slot="4" slot-scope="data" v-html="data.value"></span>
+                  <span slot="5" slot-scope="data" v-html="data.value"></span>
+                  <span slot="6" slot-scope="data" v-html="data.value"></span>
+                  <span slot="7" slot-scope="data" v-html="data.value"></span>
+                  <span slot="8" slot-scope="data" v-html="data.value"></span>
+              </b-table>
+          </b-collapse>
         </div>
         <br>
     </div>
@@ -168,18 +179,25 @@ export default {
                 var response2 = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/prefs/getSinglePref/' + prefids[j]);
                 data.push(response2.data);
               }
+              for(var y=0; y<data.length;y++){
+                  data[y].text = '<li style> ' + data[y].text + ' </li> ';
+              }
               var categories = data.map(a => a.category);
               categories = this.removeDuplicates(categories);
               console.log(categories);
               for(var l=0; l<categories.length; l++){
-              var helperArray =  this.filterByCat(data, 'category', categories[l]);
-              item[categories[l]] = helperArray;
-              }
+                  item[categories[l]] ='';
+                  var helperArray =  this.filterByCat(data, 'category', categories[l]);
+                  console.log('helperArray:')
+                  console.log(helperArray)
+                  for(var a=0; a<helperArray.length; a++){
+                    item[categories[l]] = item[categories[l]] + helperArray[a].text;
+                  }
+                }
             }
             this.items[this.items.length -1].push(item);
           }
           console.log(this.items);
-          console.log(this.tableArray)
       }
     },
     
