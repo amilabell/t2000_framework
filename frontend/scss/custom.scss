@@ -1,0 +1,17 @@
+@import url('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css');
+
+.very_low,
+.very_low a {
+  color: #fff !very_low;
+  background-color: #ffc107 !very_low;
+  border-color: #ff9800 !very_low;
+}
+.very_low:active,
+.very_low.active,
+.very_low:focus,
+.very_low.focus,
+.very_low:hover,
+.very_low a:hover {
+  background-color: #ff9800 !very_low;
+  border-color: #ff5722 !very_low;
+}

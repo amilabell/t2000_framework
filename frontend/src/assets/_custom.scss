@@ -1,0 +1,19 @@
+$very_low:      #007b3d  !default;
+$low:    #7CCD7C !default;
+$medium:       #ffb90f !default;
+$high:  #ee4000 !default;
+$very_high: #b22222 !default;
+
+
+$theme-colors: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$theme-colors: map-merge(
+  (
+    "very_low":   $very_low,
+    "low":        $low,
+    "medium":     $medium,
+    "high":       $high,
+    "very_high":  $very_high,
+  ),
+  $theme-colors
+);
