@@ -3,27 +3,15 @@
         <div id="titleDiv">
             <h2>Please select your target locales:</h2>
         </div>
-        <div>
-            <b-form-select @input="getPrefs(clickedCountry)"  v-model="clickedCountry" :options="countries" value-field="c_code" text-field="name" class="countrySelect"/>
-        <p/>
+        <countrySelect @countryClick="getPrefs($event)"></countrySelect>
+        <div v-if="clickedCountry">
+            Please read the results below carefully! Keep in mind that those are just suggestions, showing how users from a specific country may prefer a User-Interface to be. 
+            <br/>However, the cultural background does only influence a person to a not yet completely recognized degree and 
         </div>
         <!--view preferences-->
         <div v-for="(item, index) in tableArray" class="tableDivs">
-            <b-row align-h="around">
-              <b-col>{{item.name}}</b-col>
-              <b-col cols="auto"><toggle-button  @change="toggle(index)" :width='75' :value="true" :labels="{checked: 'displayed', unchecked: 'hidden'}"/></b-col>
-            </b-row>
           <b-collapse visible :id="item.name" v-model="item.bool">
-              <b-table small responsive :key="item.name" :items="items[index]" :fields="categories" class="table">
-                  <span slot="1" slot-scope="data" v-html="data.value"></span>
-                  <span slot="2" slot-scope="data" v-html="data.value"></span>
-                  <span slot="3" slot-scope="data" v-html="data.value"></span>
-                  <span slot="4" slot-scope="data" v-html="data.value"></span>
-                  <span slot="5" slot-scope="data" v-html="data.value"></span>
-                  <span slot="6" slot-scope="data" v-html="data.value"></span>
-                  <span slot="7" slot-scope="data" v-html="data.value"></span>
-                  <span slot="8" slot-scope="data" v-html="data.value"></span>
-              </b-table>
+              <countryTable :title="item.name" :keyAttr="item.name" :items="items[index]" :categories="categories"></countryTable>
           </b-collapse>
         </div>
         <br>
@@ -32,9 +20,14 @@
 
 <script>
 import axios from 'axios';
-
+import countrySelect from './CountrySelect.vue';
+import countryTable from './Table.vue';
 export default {
     name: 'Dashboard',
+    components: {
+      countrySelect,
+      countryTable
+    },
      data () {
     return {
       selected: 'countries',
@@ -45,29 +38,18 @@ export default {
       tableArray: [],
       items_degree: [],
       categories: [{key: 'dim', label: 'dim'}, {key: 'pole', label: 'score'}],
-      test: {
-        
-      }
+      items: [],
     };
   },
   async mounted(){
-      this.countries = await this.getCountries();
       await this.getCategories();
       this.dims = await this.getDims();
     },
 
   methods:{
-    async getCountries(){
-            var response = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/countries/getAll');
-            for(var i=0; i<response.data.length; i++){
-              response.data[i]['disabled'] = !response.data[i].hasDims;
-            }
-            return response.data;
-    },
-    
     async getCountry(id){
         var response = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/countries/getOne/' + id);
-        console.log(response)
+        console.log(response);
         return response.data[0].name;
     },
     
@@ -91,7 +73,7 @@ export default {
       var response = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/prefs/getCats');
       var data = response.data;
       for(var i=0; i<data.length; i++){
-        this.categories.push({'label': data[i].name, 'key': data[i].id, "'class'": "'column'"});
+        this.categories.push({'label': data[i].name, 'key': data[i].id, 'thStyle': {'min-width': '220px !important'}});
       }
     },
     
@@ -108,7 +90,7 @@ export default {
         var response = false;
         for(var q=0; q<this.tableArray.length; q++){
             if(this.tableArray[q].name === name){
-                response = true
+                response = true;
             }
         }
         return response;
@@ -117,9 +99,8 @@ export default {
     getPrefs: async function(c_code){
         var name = await this.getCountry(c_code);
       //retrieve position of element already in array
-      
       var x = this.checkArray(name);
-      console.log(x)
+      console.log(x);
       if(x === false){
         //var position = this.tableArray.length;
         this.tableArray.push({'name': name, 'bool': true});
@@ -136,6 +117,7 @@ export default {
             item['pole'] = poleArray.score;
             item['_rowVariant'] = poleArray.rowvariant;
             item['dim'] = this.dims[i];
+            console.log(item.dim);
             if(pole === true || pole === false){
               //ids = all the ids for the given dimension and pole
               var ids = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/prefs/getPref/' + this.dims[i] + '/' + pole);
@@ -150,6 +132,7 @@ export default {
               }
               for(var y=0; y<data.length;y++){
                   data[y].text = '<li style> ' + data[y].text + ' </li> ';
+                  console.log(data[y].text);
               }
               var categories = data.map(a => a.category);
               categories = this.removeDuplicates(categories);
@@ -166,8 +149,9 @@ export default {
           console.log(this.items);
       }
       else{
-          alert("Country already selected")
+          alert("Country already selected");
       }
+      console.log(this.categories[3].thStyle);
     },
     
     filterByCat: function(array, key, value) {
@@ -228,7 +212,7 @@ export default {
         console.log(this.tableArray[index].bool);
     }
   }
-}
+};
 
 </script>
 
@@ -236,9 +220,6 @@ export default {
 #titleDiv{
     margin-top: 5vh;
     margin-bottom: 5vh;
-}
-.countrySelect{
-    width: 20vw;
 }
 #high{
  background-color: red; 
@@ -248,8 +229,5 @@ export default {
 }
 .table{
  font-size: 0.8em;
-}
-.column{
-    min-width: 150px;
 }
 </style>

@@ -2802,94 +2802,94 @@ const preferences = [
     },
     {
         text: "Authentication needed",
-        category: 6,
+        category: 7,
         id: 711
     },
     {
         text: "Frequent, explicit and enforced restrictions",
-        category: 6,
+        category: 7,
         id: 712
     },
     {
         text: "Transparent",
-        category: 6,
+        category: 7,
         id: 713
     },
     {
         text: "Implicit restrictions",
-        category: 6,
+        category: 7,
         id: 714
     },
     {
         text: "No or limited restrictions",
-        category: 6,
+        category: 7,
         id: 715
     },
     {
         text: "High willingness to provide personal information",
-        category: 6,
+        category: 7,
         id: 720
     },
     {
         text: "Protection of personal data",
-        category: 6,
+        category: 7,
         id: 721
     },
     {
         text: "Little to no willingness to provide personal information",
-        category: 6,
+        category: 7,
         id: 722
     },
     
     //Colors
     {
         text: "Use of colors to encode information",
-        category: 7,
+        category: 8,
         id: 820
     },
     {
         text: "Monotonously colored interface",
-        category: 7,
+        category: 8,
         id: 821
     },
     {
         text: "Traditional colors",
-        category: 7,
+        category: 8,
         id: 822
     },
     {
         text: "Colorful interface",
-        category: 7,
+        category: 8,
         id: 823
     },
     {
         text: "High contrasts",
-        category: 7,
+        category: 8,
         id: 830
     },
     {
         text: "Bright colors",
-        category: 7,
+        category: 8,
         id: 831
     },
     {
         text: "Little saturation",
-        category: 7,
+        category: 8,
         id: 832
     },
     {
         text: "Pastel colors",
-        category: 7,
+        category: 8,
         id: 833
     },
     {
         text: "Use of redundant color cues to reduce ambiguity",
-        category: 7,
+        category: 8,
         id: 840
     },
     {
         text: "Warm colors",
-        category: 7,
+        category: 8,
         id: 851
     }
     ]
