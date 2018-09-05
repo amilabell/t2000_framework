@@ -1,8 +1,8 @@
 <template>
     <div class="wrapper_div">
         <b-row align-h="around">
-            <b-col>{{title}}</b-col>
-            <b-col cols="auto"><toggle-button  @change="show = !show" :width='75' :value="true" :labels="{checked: 'displayed', unchecked: 'hidden'}"/></b-col>
+            <b-col><b>{{title}}</b></b-col>
+            <b-col cols="auto"><toggle-button  @change="show = !show" :width='75' :value="true" :labels="{checked: 'displayed', unchecked: 'hidden'}"/></b-col><br/>
         </b-row>
         <b-table v-if="show" small responsive :key="keyAttr" :items="items" :fields="categories" class="table">
             <span slot="1" slot-scope="data" v-html="data.value"></span>
@@ -24,7 +24,7 @@ export default {
   data () {
     return {
         show: true
-    }
+    };
   },
   async mounted(){
       
@@ -35,12 +35,12 @@ export default {
         console.log(this.tableArray[index].bool);
     }
   }
-}
+};
 </script>
 
 <style scoped>
 .wrapper_div{
-    padding-top: 5vh;
-    padding-bottom: 5vh;
+    padding-top: 4vh;
+    padding-bottom: 4vh;
 }
 </style>

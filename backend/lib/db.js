@@ -150,22 +150,22 @@ module.exports = {
     //country queries
     getCountries: async function(){
         const countries = Country.findAll({});
-        console.log("Test")
-        return countries
+        console.log("Test");
+        return countries;
     },
     getCountry: async function(code){
         const country = Country.findAll({
             where: {
                 c_code: code
             }
-        })
-        return country
+        });
+        return country;
     },
     
     //score queries
     getScores: async function(){
         const scores = HasScore.findAll({});
-        return scores
+        return scores;
     },
     getSpecScore: async function(code, dim){
         const result = HasScore.findAll({
@@ -174,8 +174,8 @@ module.exports = {
                 c_code: code,
                 d_code: dim
             }
-        })
-        return result
+        });
+        return result;
     },
     getCountryScore: async function(code){
         const result = HasScore.findAll({
@@ -183,18 +183,18 @@ module.exports = {
             where: {
                 c_code: code
             }
-        })
-        return result
+        });
+        return result;
     },
     
     //preference queries
     getPrefs: async function(){
         const prefs = Preference.findAll({});
-        return prefs
+        return prefs;
     },
     getHasPrefs: async function(){
         const prefs = HasPref.findAll({});
-        return prefs
+        return prefs;
     },
     getSpecPrefs: async function(dim, pole){
         const result = HasPref.findAll({
@@ -203,8 +203,8 @@ module.exports = {
                 d_code: dim,
                 high: pole
             },
-        })
-        return result
+        });
+        return result;
     },
     getPrefById: async function(id){
         const pref = Preference.find({
@@ -212,14 +212,14 @@ module.exports = {
             where: {
                 id: id
             },
-        })
-        return pref
+        });
+        return pref;
     },
     
     //category queries
     getCats: async function(){
         const result = Category.findAll({});
-        return result
+        return result;
     },
     
     //dimension queries
@@ -227,7 +227,7 @@ module.exports = {
         const result = Dimension.findAll({
             attributes: ['d_code']
         });
-        return result
+        return result;
     }
     
-}
+};

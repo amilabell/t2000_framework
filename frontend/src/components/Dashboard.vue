@@ -1,20 +1,22 @@
 <template>
     <div id="rootDiv">
         <div id="titleDiv">
-            <h2>Please select your target locales:</h2>
+          <b-row><h2>Welcome to the Web-Globalization-Framework</h2></b-row>
         </div>
         <countrySelect @countryClick="getPrefs($event)"></countrySelect>
-        <div v-if="clickedCountry">
-            Please read the results below carefully! Keep in mind that those are just suggestions, showing how users from a specific country may prefer a User-Interface to be. 
-            <br/>However, the cultural background does only influence a person to a not yet completely recognized degree and 
+        
+        <b-row>
+        <div id="hint" v-if="items.length >= 1">
+          Your results will be displayed in the table(s) below. Please read them carefully and keep in mind that those are <b>only suggestions</b>, showing which UI-related preferences users from a specific locale may <b>possibly</b> have. 
+            <br/>However, the extend to which the cultural background of a locale influences UI-preferences is still unknown, and further research needs to be conducted.<br/>
         </div>
+        </b-row>
         <!--view preferences-->
+        <b-row>
         <div v-for="(item, index) in tableArray" class="tableDivs">
-          <b-collapse visible :id="item.name" v-model="item.bool">
               <countryTable :title="item.name" :keyAttr="item.name" :items="items[index]" :categories="categories"></countryTable>
-          </b-collapse>
         </div>
-        <br>
+        </b-row>
     </div>
 </template>
 
@@ -22,11 +24,13 @@
 import axios from 'axios';
 import countrySelect from './CountrySelect.vue';
 import countryTable from './Table.vue';
+import helpBtn from './HelpBtn.vue';
 export default {
     name: 'Dashboard',
     components: {
       countrySelect,
-      countryTable
+      countryTable,
+      helpBtn,
     },
      data () {
     return {
@@ -34,11 +38,9 @@ export default {
       dims: [],
       items: [],
       countries: [],
-      clickedCountry: '',
       tableArray: [],
       items_degree: [],
       categories: [{key: 'dim', label: 'dim'}, {key: 'pole', label: 'score'}],
-      items: [],
     };
   },
   async mounted(){
@@ -47,27 +49,16 @@ export default {
     },
 
   methods:{
-    async getCountry(id){
+    getCountry: async function(id){
         var response = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/countries/getOne/' + id);
         console.log(response);
         return response.data[0].name;
     },
     
-    async getDegrees(id){
+    /*getDegrees: async function(id){
       var response = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/countries/getDims/' + id);
       return(response);
-    },
-    
-    showingOverview: async function(){
-      for(var i=0; i<this.items.length; i++){
-        var response = await this.getDegrees(this.items[i].code);
-        if(this.items_degree === null || this.items_degree === [] || this.items_degree.length === 0){
-          this.items_degree = response.data;
-        }else{
-          this.items_degree.push(response.data[0]);
-        }
-      }
-    },
+    },*/
     
     getCategories: async function(){
       var response = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/prefs/getCats');
@@ -97,7 +88,7 @@ export default {
     },
     
     getPrefs: async function(c_code){
-        var name = await this.getCountry(c_code);
+      var name = await this.getCountry(c_code);
       //retrieve position of element already in array
       var x = this.checkArray(name);
       console.log(x);
@@ -206,11 +197,6 @@ export default {
       var response = await axios.get('http://t2000-framework-amilabell.c9users.io:8082/score/getDims/' + c_code);
       return response.data;
     },
-    
-    toggle: function(index){
-        this.tableArray[index].bool = this.tableArray[index].bool ? false : true;
-        console.log(this.tableArray[index].bool);
-    }
   }
 };
 
@@ -224,10 +210,21 @@ export default {
 #high{
  background-color: red; 
 }
+#hint{
+  background-color: #ff7a6e;
+  border-radius: 5px; 
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 7px;
+  padding-left: 7px;
+}
 .tableDivs{
      max-width: 100%;
 }
 .table{
  font-size: 0.8em;
+}
+#rootDiv{
+  color: #220b54;
 }
 </style>

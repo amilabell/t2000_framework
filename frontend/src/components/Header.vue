@@ -1,16 +1,15 @@
 <template>
     <div id="NavBar">
-        <b-navbar toggleable="md" type="dark" variant="primary" >
+        <b-navbar toggleable="md" type="dark">
         
           <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
         
-          <b-navbar-brand href="#">Dashboard</b-navbar-brand>
+          <b-navbar-brand to="/">Dashboard</b-navbar-brand>
         
           <b-collapse is-nav id="nav_collapse">
         
             <b-navbar-nav>
-              <b-nav-item href="#"disabled>Impressum</b-nav-item>
-              <b-nav-item href="#" disabled>Help</b-nav-item>
+              <b-nav-item to="/help">About</b-nav-item>
             </b-navbar-nav>
         
             <!-- Right aligned nav items -->
@@ -27,13 +26,14 @@ export default {
   name: 'Header',
   data () {
     return {
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>
 #NavBar{
     margin-top: 5vh;
+    background-color: #4f9da6;
 }
 </style>

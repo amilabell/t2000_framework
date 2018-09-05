@@ -1,7 +1,7 @@
 const fs = require('fs');
 var express = require('express');
 var router = express.Router();
-const DIMS = ['pdi', 'idv', 'mas', 'uai', 'lto','ivr']
+const DIMS = ['pdi', 'idv', 'mas', 'uai', 'lto','ivr'];
 const db = require('../lib/db');
 
 //get all scores of all countries
